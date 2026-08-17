@@ -1,0 +1,40 @@
+name: Apply artistic section titles
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update title typography
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("index.html")
+          s = p.read_text(encoding="utf-8")
+          old_import = '<style>\n'
+          new_import = '<style>\n@import url("https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap");\n'
+          if '@import url("https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap")' not in s:
+              s = s.replace(old_import, new_import, 1)
+          old = 'h1,h2,.title,.quote p,.fact strong,.story h3,.modal h2{font-family:"Noto Serif SC",serif;font-weight:400}'
+          new = old + '.title,.contact h2{font-family:"Zhi Mang Xing","Noto Serif SC",serif;font-weight:400}'
+          if '.title,.contact h2{font-family:"Zhi Mang Xing"' not in s:
+              s = s.replace(old, new, 1)
+          p.write_text(s, encoding="utf-8")
+          PY
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then exit 0; fi
+          git add index.html
+          git commit -m "Style section titles with artistic typography"
+          git push
