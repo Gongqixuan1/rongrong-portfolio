@@ -1,0 +1,10 @@
+Search assets added in this branch:
+- search.js: internal portfolio search
+- search.css: editorial search overlay
+- robots.txt + sitemap.xml: search engine discovery
+
+To activate internal search on index.html, include before </head>:
+<link rel="stylesheet" href="search.css">
+<script src="search.js" defer></script>
+
+Recommended semantic section ids for instant navigation: timeline, internships, projects, competitions, side-projects, skills, contact.
