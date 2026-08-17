@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gongqixuan1.github.io/rongrong-portfolio/sitemap.xml
