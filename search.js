@@ -23,4 +23,6 @@
     results.addEventListener('click',e=>{const r=e.target.closest('.search-result'); if(!r)return; const el=document.getElementById(r.dataset.id); overlay.classList.remove('open'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+  const loadLifeMap=()=>{if(document.querySelector('script[data-life-map]'))return;const s=document.createElement('script');s.src='life-map.js';s.dataset.lifeMap='1';document.body.appendChild(s)};
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',loadLifeMap); else loadLifeMap();
 })();
