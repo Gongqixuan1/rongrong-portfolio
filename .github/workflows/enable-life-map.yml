@@ -1,0 +1,34 @@
+name: Enable Life Map Demo
+on:
+  push:
+    branches: [life-map-demo]
+permissions:
+  contents: write
+jobs:
+  enhance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inject experimental layer
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          css='<link rel="stylesheet" href="life-map.css">'
+          js='<script src="life-map.js" defer></script>'
+          changed=False
+          if css not in s:
+              s=s.replace('</head>', css+'</head>', 1); changed=True
+          if js not in s:
+              s=s.replace('</body>', js+'</body>', 1); changed=True
+          if changed:
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit enhanced demo
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || git commit -m 'feat: enable life map demo'
+          git push
