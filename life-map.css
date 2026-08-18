@@ -1,0 +1,35 @@
+/* LIFE MAP DEMO — visual experiment only */
+.timeline{position:relative;isolation:isolate;overflow:visible}
+.timeline .time{z-index:2;transition:transform .55s cubic-bezier(.2,.75,.25,1),opacity .55s ease,filter .55s ease}
+.timeline .time.life-pending{opacity:.38;filter:saturate(.7);transform:translateY(18px)}
+.timeline .time.life-active{opacity:1;filter:none;transform:none}
+.life-map-layer{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:visible}
+.life-map-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.life-map-path{fill:none;stroke:var(--orange);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 4px 10px #ff7a0030);stroke-dasharray:1000;stroke-dashoffset:1000;transition:stroke-dashoffset 1.8s cubic-bezier(.22,.75,.2,1)}
+.life-map-path.drawn{stroke-dashoffset:0}
+.life-node{position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--orange);box-shadow:0 0 0 0 #ff7a0040;transform:translate(-50%,-50%);transition:transform .35s ease,box-shadow .35s ease,background .35s ease;z-index:3}
+.life-node:after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--orange);transform:scale(0);transition:transform .3s ease}
+.life-node.current{transform:translate(-50%,-50%) scale(1.35);box-shadow:0 0 0 9px #ff7a0015}
+.life-node.current:after{transform:scale(1)}
+.life-map-label{position:absolute;right:0;top:-42px;font-size:9px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;opacity:0;transform:translateY(8px);transition:.5s ease;white-space:nowrap}
+.life-map-label.show{opacity:1;transform:none}
+.life-map-label b{color:var(--orange);font-weight:700}
+.life-map-hint{display:flex;justify-content:space-between;align-items:center;margin-top:18px;color:var(--muted);font-size:9px;letter-spacing:.12em;opacity:.7}
+.life-map-hint span:last-child{color:var(--orange)}
+@media(max-width:900px){
+  .timeline .time{position:relative}
+  .life-map-layer{inset:0 0 0 0}
+  .life-map-svg{width:40px;left:0;right:auto;height:100%}
+  .life-map-path{stroke-width:2.2}
+  .life-node{width:14px;height:14px}
+  .life-map-label{right:0;top:-32px;font-size:8px}
+}
+@media(max-width:560px){
+  .timeline{padding-left:0}
+  .timeline .time.life-pending{transform:translateY(12px)}
+  .life-map-label{top:-27px;max-width:70%;overflow:hidden;text-overflow:ellipsis}
+  .life-map-hint{font-size:8px;line-height:1.5}
+}
+@media(prefers-reduced-motion:reduce){
+  .timeline .time,.life-map-path,.life-node,.life-map-label{transition:none!important}
+}
