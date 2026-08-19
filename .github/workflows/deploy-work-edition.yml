@@ -1,0 +1,48 @@
+name: Deploy WORK Edition
+
+on:
+  push:
+    branches:
+      - personal-portfolio-redesign
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout redesign branch
+        uses: actions/checkout@v4
+
+      - name: Build site
+        run: |
+          rm -rf _site
+          mkdir -p _site
+          cp index.html _site/original.html
+          sed 's#src="index.html"#src="original.html"#' work.html > _site/index.html
+          cp -R assets _site/ 2>/dev/null || true
+          touch _site/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
