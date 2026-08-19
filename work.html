@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>徐溶溶｜Personal Portfolio — WORK Edition</title>
+<style>
+:root{--ink:#0b1f3a;--orange:#ff7a00;--paper:#f5f7fa}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff}
+#portfolio{display:block;width:100%;height:100%;border:0;background:#fff}
+#loader{position:fixed;inset:0;z-index:10;background:#0b1f3a;color:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .8s ease,visibility .8s ease}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none}
+.loader-inner{width:min(620px,calc(100% - 48px))}
+.loader-top{display:flex;justify-content:space-between;align-items:end;font:700 10px/1 Inter,Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;opacity:.72}
+.loader-name{font:400 clamp(64px,12vw,150px)/.85 'Noto Serif SC','Songti SC',serif;margin:42px 0 24px}
+.loader-line{height:1px;background:#ffffff38;position:relative;overflow:hidden}
+.loader-line:after{content:"";position:absolute;left:0;top:0;width:0;height:100%;background:#ff7a00;animation:load 1.4s cubic-bezier(.77,0,.18,1) forwards}
+@keyframes load{to{width:100%}}
+</style>
+</head>
+<body>
+<div id="loader"><div class="loader-inner"><div class="loader-top"><span>RONGRONG / WORK</span><span>2026</span></div><div class="loader-name">徐溶溶</div><div class="loader-line"></div></div></div>
+<iframe id="portfolio" src="index.html" title="徐溶溶 Personal Portfolio"></iframe>
+<script>
+const frame=document.getElementById('portfolio');
+const loader=document.getElementById('loader');
+function enhance(){
+  const doc=frame.contentDocument;
+  if(!doc)return;
+  const style=doc.createElement('style');
+  style.id='work-edition-style';
+  style.textContent=`
+    :root{--ink:#0b1f3a;--orange:#ff7a00;--blue:#3158d8;--pink:#f2c6d7;--yellow:#f3d47a;--cyan:#b9dff0;--cream:#faf8f3;--paper:#f5f7fa;--muted:#64748b;--line:#dfe4ea;--max:1280px}
+    html{scroll-behavior:smooth}
+    body{font-family:Inter,-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#fff;color:var(--ink);line-height:1.75}
+    .welcome{display:none!important}
+    .nav{height:76px;background:rgba(255,255,255,.88);border-bottom:1px solid #0b1f3a1a;backdrop-filter:blur(22px)}
+    .brand{font-size:12px;letter-spacing:.08em}.brand b{color:var(--orange)}
+    .links{gap:28px;font-size:9px;letter-spacing:.16em}
+    .links a{position:relative}.links a:after{content:'';position:absolute;left:0;bottom:-7px;width:0;height:1px;background:var(--orange);transition:width .3s}.links a:hover:after{width:100%}
+    .hero{min-height:calc(100vh - 76px);background:var(--cream)}
+    .hero:before{width:520px;height:520px;right:-210px;top:-180px;background:#f3d47a66}
+    .hero:after{width:340px;height:340px;left:-190px;bottom:-180px;background:#f2c6d755}
+    .hero-grid{grid-template-columns:1.08fr .82fr;gap:90px;padding:82px 0}
+    .hero h1{font-family:'Noto Serif SC',serif;font-size:clamp(96px,13vw,176px);font-weight:400;letter-spacing:-.07em;line-height:.76;margin:20px 0 30px}
+    .hero-sub{font-size:clamp(18px,2vw,25px);max-width:620px}.hero-note{font-size:14px;max-width:600px}
+    .tag{background:transparent;border:1px solid #0b1f3a25;padding:6px 10px;font-size:9px;transition:.25s}.tag:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .funfacts{gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .fact{border:0;border-right:1px solid var(--line);padding:16px 12px;background:transparent}.fact:last-child{border:0}.fact strong{font-family:Inter,sans-serif;font-weight:500;font-size:31px}
+    .avatar-wrap{width:min(500px,100%)}.avatar-card{inset:30px 24px 24px;transform:rotate(1.2deg);box-shadow:0 30px 80px #0b1f3a22}
+    .sticker{font-size:8px;letter-spacing:.14em}.star{opacity:.65}
+    .section{padding:125px 0;border-bottom:1px solid var(--line)}
+    .soft{background:#f5f7fa}.eyebrow,.kicker{font-size:9px;letter-spacing:.2em}.kicker:before{width:42px;height:1px}
+    .title{font-family:'Noto Serif SC',serif;font-size:clamp(64px,8vw,108px);letter-spacing:-.055em}
+    .timeline{grid-template-columns:repeat(6,1fr);border-top:1px solid var(--ink)}
+    .time{padding:22px 20px 22px 0;min-height:300px}.time:before{width:8px;height:8px;top:-4px}.time h3{font-size:15px}.time p{font-size:11px}
+    .quote{padding:100px 0 10px}.quote p{font-family:'Noto Serif SC',serif;font-size:clamp(34px,4vw,58px);letter-spacing:-.04em}
+    .experience{border-top:1px solid var(--line)}
+    .exp-item{display:grid;grid-template-columns:160px 1fr;column-gap:50px;padding:34px 0 34px 0;border-top:0;border-bottom:1px solid var(--line)}
+    .exp-item:before{left:auto;right:0;top:39px;font-size:13px}.exp-date{font-size:9px;letter-spacing:.13em}.exp-item h3{font-size:23px;margin:0 0 6px}.exp-role{font-size:11px}.exp-item ul{font-size:11px;line-height:1.9;max-width:800px}
+    .project-grid,.competition-grid,.stories{gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+    .project-card,.comp,.story{border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s}
+    .project-card:hover,.comp:hover,.story:hover{transform:translateY(-8px);box-shadow:0 24px 55px #0b1f3a14}
+    .project-card{padding:30px;min-height:320px}.project-card h3{font-size:25px}.project-meta{font-size:9px}
+    .works{margin-top:90px}.works-head{border-bottom:1px solid var(--line);padding-bottom:18px}.works-head h3{font-family:'Noto Serif SC',serif;font-weight:400;font-size:54px;letter-spacing:-.04em}.portfolio{border-radius:0;padding:36px;background:#0b1f3a;min-height:700px}.portfolio:before{background:#ff7a0038}.book{min-height:650px;grid-template-columns:90px 1fr 90px}.book-stage{height:610px}.book-stage img{max-height:600px;box-shadow:0 35px 70px #0008;transition:transform .5s}.book-stage img:hover{transform:scale(1.015)}.book-btn{width:48px;height:48px;font-size:22px;background:transparent}.book-info,.book-count{font-size:9px;letter-spacing:.16em}
+    .comp{padding:32px;min-height:280px}.comp h3{font-family:'Noto Serif SC',serif;font-size:38px;font-weight:400}.badge{font-size:8px;letter-spacing:.12em}
+    .story-image{height:300px}.story-body{padding:28px 30px 34px}.story h3{font-family:'Noto Serif SC',serif;font-size:42px;font-weight:400}
+    .skills-layout{gap:90px}.skill-list{gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}.skill-box{border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:24px;min-height:125px}.skill-box strong{font-size:14px}.skill-box span{font-size:9px}
+    .contact{padding:140px 0 80px;background:var(--cream)}.contact h2{font-family:'Noto Serif SC',serif;font-size:clamp(76px,9vw,132px);letter-spacing:-.07em}.contact-item{grid-template-columns:120px 1fr;padding:16px 0}
+    .footer{font-size:9px;letter-spacing:.08em}
+    .modal{background:#0b1f3ae8}.modal-card{border-radius:0;padding:44px}.modal h2{font-family:'Noto Serif SC',serif;font-weight:400;font-size:58px;letter-spacing:-.04em}.close{border-radius:50%}
+    .lightbox{background:#071a34f2}.lightbox img{box-shadow:0 30px 90px #0008}
+    @media(max-width:900px){.hero-grid{gap:40px}.hero h1{font-size:clamp(78px,22vw,130px)}.timeline{grid-template-columns:repeat(2,1fr)}.time{min-height:230px}.exp-item{grid-template-columns:1fr;gap:8px}.project-grid,.competition-grid,.stories{grid-template-columns:1fr}.book{grid-template-columns:60px 1fr 60px}.portfolio{padding:20px}.book-stage{height:500px}.book-stage img{max-height:480px}.section{padding:90px 0}.contact{padding-top:100px}}
+  `;
+  doc.head.appendChild(style);
+  const bar=doc.createElement('div');bar.id='work-progress';bar.style.cssText='position:fixed;left:0;top:0;height:2px;width:0;background:#ff7a00;z-index:99999;transition:width .08s linear;pointer-events:none';doc.body.appendChild(bar);
+  const update=()=>{const root=doc.documentElement;const max=root.scrollHeight-root.clientHeight;bar.style.width=(max?root.scrollTop/max*100:0)+'%'};
+  doc.addEventListener('scroll',update,{passive:true});update();
+  setTimeout(()=>loader.classList.add('hide'),900);
+}
+frame.addEventListener('load',enhance);
+</script>
+</body>
+</html>
