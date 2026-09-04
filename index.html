@@ -183,6 +183,24 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline-off
   .journey-quote .jq-text{font-size:clamp(30px,9vw,46px);line-height:1.4}
   .journey-quote .jq-scene{margin-top:10px;max-width:100%}
 }
+
+/* ============================================================
+   FEATURES ROUND 3 · 工作趣事：点击副本角色图片弹出白底气泡
+   ============================================================ */
+.story-image{position:relative;cursor:pointer}
+.funfact-tag{position:absolute;top:10px;right:10px;z-index:6;background:var(--orange);color:#fff;font-size:9px;letter-spacing:.08em;padding:4px 10px;border-radius:20px;font-weight:600;box-shadow:0 4px 12px rgba(231,84,128,.35);pointer-events:none;transition:transform .2s ease}
+.story-image:hover .funfact-tag{transform:scale(1.06)}
+.funfact-bubble{position:absolute;left:50%;top:50%;transform:translate(-50%,-46%) scale(.94);width:88%;max-width:320px;padding:14px 16px 13px;background:#fff;border-radius:14px;box-shadow:0 14px 34px rgba(11,31,58,.24);z-index:5;opacity:0;visibility:hidden;transition:opacity .3s ease,transform .3s ease,visibility .3s;pointer-events:none;font-family:'Noto Serif SC','Songti SC','STSong','SimSun',serif}
+.funfact-bubble:after{content:'';position:absolute;left:50%;bottom:-8px;width:15px;height:15px;background:#fff;transform:translateX(-50%) rotate(45deg);box-shadow:3px 3px 7px rgba(11,31,58,.10)}
+.funfact-bubble .ff-ico{color:var(--orange)}
+.funfact-bubble-text{font-size:12.5px;line-height:1.75;color:var(--ink)}
+.funfact-bubble.show{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+@media (prefers-reduced-motion:reduce){.funfact-bubble{transition:none}}
+@media(max-width:560px){
+  .funfact-tag{font-size:8px;padding:3px 8px;top:8px;right:8px}
+  .funfact-bubble{width:92%;padding:12px 14px 11px}
+  .funfact-bubble-text{font-size:12px;line-height:1.7}
+}
 </style><link rel="stylesheet" href="search.css"><script src="search.js" defer></script><script>
 /* ============================================================
    RANDOM QUOTE · 首页头部：每次刷新随机展示一句语录（带引号）
@@ -262,7 +280,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline-off
 <section id="experience" class="section"><div class="wrap"><div class="top"><div><div class="kicker">02 — INTERNSHIPS</div><h2 class="title">实习经历</h2></div></div><div class="experience"><div class="exp-item"><div class="exp-date">2025.01 — 2025.03</div><h3>重庆中瑞诚会计师事务所</h3><div class="exp-role">经营性审计实习生</div><ul><li>参与多家企业年度财务报表审计项目，协助完成凭证抽查、财务数据核验、合同查证及资料归档等工作。</li><li>累计处理会计凭证1000余份，运用 Excel 完成审计数据整理、分类及分析，支持团队推进审计项目执行。</li></ul></div><div class="exp-item"><div class="exp-date">2026.01 — 2026.03</div><h3>招商银行重庆巴南支行</h3><div class="exp-role">零售部厅堂助理实习生</div><ul><li>协助零售部厅堂日常运营，负责客户接待、业务咨询及分流引导，日均服务客户80余人次。</li><li>主动识别客户存款理财需求并转介至理财经理跟进，累计转介意向客户20余位，协助落地存款及理财资金超200万元。</li><li>通过识别客户需求优化厅堂分流流程，协助将高峰时段客户平均等候时间缩短约15%。</li></ul></div><div class="exp-item"><div class="exp-date">2026.07 — NOW</div><h3>深圳亿龙达信息技术有限公司</h3><div class="exp-role">新媒体运营实习生</div><ul><li>聚焦跨境物流赛道挖掘行业热点，自主完成选题策划、原创文案撰写，累计产出垂直行业原创内容20+篇。</li><li>运用 AI 工具及 Photoshop、稿定设计完成海报、宣传单、易拉宝等物料设计制作，参与线下展会布展跟进，同时负责多平台内容分发与官网维护。</li><li>对接客户咨询，进行初步需求识别与筛选，将潜在客户线索转至销售团队跟进，累计转介意向客户20余位。</li></ul></div></div></div></section>
 <section id="projects" class="section soft"><div class="wrap"><div class="top"><div><div class="kicker">03 — PROJECTS</div><h2 class="title">项目经历</h2></div></div><div class="project-grid"><div class="project-card"><div class="project-no">PROJECT 01</div><h3>校园 CCD 相机租赁</h3><p>从校园摄影消费需求出发，带领团队开展市场调研，回收有效问卷200余份，参与设备采购、成本测算、价格体系制定、推广宣传及社群运营。</p><div class="project-meta">累计服务学生130余人次 · 实现项目盈利 · 完成从需求分析到运营执行的闭环</div></div><div class="project-card"><div class="project-no">PROJECT 02</div><h3>第一届校园文创设计大赛</h3><p>统筹整体策划与执行，负责活动方案、团队分工、宣传推广、物资采购及现场组织。具体活动的落实特别鸣谢项目组的小伙伴们</p><div class="project-meta">宣传图册与视觉物料 · 评审流程 · 奖项及奖品统筹 · 150+名学生参与</div></div></div><div class="works"><div class="works-head"><h3>我的封面作品集</h3><span>ONE BY ONE · TURN THE PAGE</span></div><div class="portfolio"><div class="book"><button type="button" class="book-btn" id="prevBtn">‹</button><div class="book-stage"><img id="portfolioImg" src="cover-01.jpg" alt="封面作品"><div class="book-info" id="portfolioName">COVER 01</div><div class="book-count" id="portfolioCount">01 / 08</div></div><button type="button" class="book-btn" id="nextBtn">›</button></div></div></div></div></section>
 <section id="competitions" class="section"><div class="wrap"><div class="top"><div><div class="kicker">04 — COMPETITIONS</div><h2 class="title">竞赛经历</h2></div></div><div class="competition-grid"><div class="comp"><span class="badge">NATIONAL BRONZE</span><h3>挑战杯</h3><p>第十九届“挑战杯”全国大学生课外学术科技作品竞赛。作为团队核心成员，负责项目策划书排版优化、答辩PPT视觉设计及决赛巡展展板制作，同时参与线下巡展讲解。</p></div><div class="comp"><span class="badge">CHONGQING · 1ST</span><h3>正大杯</h3><p>第十六届“正大杯”全国大学生市场调查与分析大赛。主导问卷设计与样本数据收集，运用 SPSS 完成信效度分析及结构方程模型分析，同时负责报告整体排版与封面设计。</p></div><div class="comp"><span class="badge">A TURNING POINT</span><h3>MPAcc 案例大赛</h3><p>我的一个转折点，是我入门封面设计的契机。虽然并没有取得好名次，但让我收获很大，也让我第一次认真想：原来做设计，也可以成为一件长期坚持的事情。</p></div></div></div></section>
-<section id="side" class="section soft"><div class="wrap"><div class="top"><div><div class="kicker">05 — SIDE ROLES</div><h2 class="title">我的副本角色</h2></div></div><div class="stories"><div class="story"><div class="story-image"><img src="climbing.jpg" alt="攀岩馆助教" loading="lazy" decoding="async"></div><div class="story-body"><div class="story-no">SIDE ROLE 01</div><h3>攀岩馆助教</h3><p>给小朋友穿装备、挂锁，以及做一些基础动作教学。在这里我的角色是：棉花教练，我们每个人都有自己的代号。</p><div class="story-note">偶尔场馆内小朋友比较少，我们还会在万达广场里卖票，也是顺便体验到做销售的副本了。</div></div></div><div class="story"><div class="story-image"><img src="childcare.jpg" alt="托管班老师" loading="lazy" decoding="async"></div><div class="story-body"><div class="story-no">SIDE ROLE 02</div><h3>托管班老师</h3><p>负责学生的课后作业辅导及学习习惯培养，根据年级差异制定个性化辅导方案，并与家长保持沟通反馈。</p><div class="story-note">在这里我的角色是：托管老师。这里圆了我小时候的老师梦，感谢小朋友们一年的陪伴。</div></div></div><div class="story"><div class="story-image"><img src="封面设计师配图.jpg" alt="封面设计师" loading="lazy" decoding="async"></div><div class="story-body"><div class="story-no">SIDE ROLE 03</div><h3>封面设计师</h3><p>为多个全国性商业竞赛团队提供封面及视觉设计服务，累计完成作品70余个，从WPS到AI工具慢慢形成自己的视觉语言。</p><div class="story-note">wps+豆包+头脑风暴</div></div></div></div></div></section>
+<section id="side" class="section soft"><div class="wrap"><div class="top"><div><div class="kicker">05 — SIDE ROLES</div><h2 class="title">我的副本角色</h2></div></div><div class="stories"><div class="story"><div class="story-image"><img src="climbing.jpg" alt="攀岩馆助教" loading="lazy" decoding="async"><span class="funfact-tag">工作趣事 ✦</span><div class="funfact-bubble" role="status" aria-live="polite"><span class="ff-ico">✦ </span><span class="funfact-bubble-text"></span></div></div><div class="story-body"><div class="story-no">SIDE ROLE 01</div><h3>攀岩馆助教</h3><p>给小朋友穿装备、挂锁，以及做一些基础动作教学。在这里我的角色是：棉花教练，我们每个人都有自己的代号。</p><div class="story-note">偶尔场馆内小朋友比较少，我们还会在万达广场里卖票，也是顺便体验到做销售的副本了。</div></div></div><div class="story"><div class="story-image"><img src="childcare.jpg" alt="托管班老师" loading="lazy" decoding="async"><span class="funfact-tag">工作趣事 ✦</span><div class="funfact-bubble" role="status" aria-live="polite"><span class="ff-ico">✦ </span><span class="funfact-bubble-text"></span></div></div><div class="story-body"><div class="story-no">SIDE ROLE 02</div><h3>托管班老师</h3><p>负责学生的课后作业辅导及学习习惯培养，根据年级差异制定个性化辅导方案，并与家长保持沟通反馈。</p><div class="story-note">在这里我的角色是：托管老师。这里圆了我小时候的老师梦，感谢小朋友们一年的陪伴。</div></div></div><div class="story"><div class="story-image"><img src="封面设计师配图.jpg" alt="封面设计师" loading="lazy" decoding="async"><span class="funfact-tag">工作趣事 ✦</span><div class="funfact-bubble" role="status" aria-live="polite"><span class="ff-ico">✦ </span><span class="funfact-bubble-text"></span></div></div><div class="story-body"><div class="story-no">SIDE ROLE 03</div><h3>封面设计师</h3><p>为多个全国性商业竞赛团队提供封面及视觉设计服务，累计完成作品70余个，从WPS到AI工具慢慢形成自己的视觉语言。</p><div class="story-note">wps+豆包+头脑风暴</div></div></div></div></div></section>
 <section id="skills" class="section"><div class="wrap"><div class="top"><div><div class="kicker">06 — SKILLS</div><h2 class="title">技能</h2></div></div><div class="skills-layout"><div class="skill-list"><div class="skill-box"><strong>Office</strong><span>Excel · PowerPoint · Word<br>Excel：数据透视表、VLOOKUP</span></div><div class="skill-box"><strong>数据分析</strong><span>SPSS 基础操作<br>问卷信效度检验 · 基础结构方程模型</span></div><div class="skill-box"><strong>视觉设计</strong><span>Photoshop · 稿定设计<br>海报、活动物料、封面设计</span></div><div class="skill-box"><strong>AI 工具</strong><span>内容创作 · 信息整理 · 办公效率提升</span></div></div><div class="skill-list"><div class="skill-box"><strong>英语</strong><span>基础英文读写</span><span class="cert">CET-4 · 434</span></div><div class="skill-box"><strong>计算机</strong><span>MS Office 高级应用与设计</span><span class="cert">全国计算机等级考试二级</span></div><div class="skill-box"><strong>内容运营</strong><span>公众号 · 小红书 · 行业选题 · 文案 · 多平台分发</span></div><div class="skill-box"><strong>项目推进</strong><span>团队协作 · 活动执行 · 资源协调 · 客户沟通</span></div></div></div></div></section>
 <section id="contact" class="contact"><div class="wrap"><div class="contact-grid"><div><div class="kicker">07 — CONTACT</div><h2>联系方式</h2></div><div class="contact-list"><div class="contact-item"><div class="contact-label">WECHAT</div><div>Rrcz0908</div></div><div class="contact-item"><div class="contact-label">QQ</div><div>3582686820</div></div><div class="contact-item"><div class="contact-label">QQ MAIL</div><a href="mailto:3582686820@qq.com">3582686820@qq.com</a></div></div></div><div class="footer"><span>宫启宣 · Personal Portfolio</span><span>Made with curiosity, mistakes & a little bit of fun.</span></div></div></section></main>
 <div class="modal" id="campusModal"><div class="modal-card"><div class="modal-top"><div><div class="kicker">CAMPUS ARCHIVE</div><h2>大学生创业助学基地</h2></div><button class="close" onclick="closeCampus()">×</button></div><p class="modal-intro">重庆科技大学大学生创业助学基地成立于2006年，由学工部直接领导，以企业化模式运行，实行自主经营、自负盈亏。基地设有三个部门、三个中心，长期为学生提供勤工助学与实践平台。</p><div class="dept-grid"><div class="dept"><h3>行政部</h3><p>负责规章制度、宣传协调、档案、考核、薪酬福利、劳动合同及员工培训等。</p></div><div class="dept"><h3>财务部</h3><p>负责财务管理、会计核算、会计监督、财务分析及相关计划。</p></div><div class="dept"><h3>物流部</h3><p>负责物资采购、储运管理与资产维护，是基地各部门中心的“管家”。</p></div><div class="dept"><h3>报刊服务中心</h3><p>面向全校的生活服务与主要创收中心，经营报刊、饮品、食品等校园便利商品。</p></div><div class="dept"><h3>科技服务中心</h3><p>面向校园的科技服务平台，提供打印、复印、寸照、横幅、喷绘、广告设计、电脑维护等服务。</p></div><div class="dept"><h3>绿色服务中心</h3><p>面向校园的文化服务平台，经营二手书、花卉盆栽并开展废旧物品回收。</p></div></div><div class="role-note"><strong>行政总监职责：</strong>负责行政部的日常管理，并对接营业中心人事经理，参与人员管理、培训、绩效、制度与项目协调等工作。</div></div></div>
@@ -375,5 +393,59 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline-off
       rain();
     }
   });
+})();
+</script><script>
+/* ============================================================
+   WORK FUN FACTS · 工作趣事：点击副本角色图片，白底气泡随机展示一句趣事并自动渐隐
+   点击任意副本角色图片 → 从该板块语录池随机取一句，气泡淡入约4.2秒后淡出
+   ============================================================ */
+(function(){
+  var FF_QUOTES=[
+    ['有段时间，星星教练希望我能试着陪爬，我试了，发现上去之后，还没有小朋友坚持的久。',
+     '攀岩怎么这么累，小朋友们是怎么几下子就爬上去的',
+     '本来只需要救小朋友的，我上去之后发现要多救一个大人。',
+     '有些小朋友简直就是天使',
+     '有小朋友问我是什么教练，怎么没见过我。我就会叫小朋友做选择题，给他/她三个选项A.汉堡教练B.星星教练C.棉花教练，他们每次都能选对，因为前两个教练他们都认识。'],
+    ['小孩子怎么可以这么可爱又可恶！',
+     '王老师做的饭好好吃,Yummy，yummy!',
+     '老师，你为什么要叫我们乖乖，我们哪天不乖了你叫我们什么？',
+     '老师我不开心，我不想写作业了。',
+     '老师你今天怎么化妆了。'],
+    ['天啊，我居然也是帮人设计上了。',
+     '被人认可好开心。',
+     '妈呀，这个设计被顾客否定了，我果然还是不适合设计。',
+     '天怎么亮了，我居然做了一晚上。',
+     '好的ps真不比wps差。',
+     '这单干完，要不就归隐吧。']
+  ];
+  var last=[-1,-1,-1];
+  var reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function pick(i){
+    var qs=FF_QUOTES[i], idx;
+    do{ idx=Math.floor(Math.random()*qs.length); }while(idx===last[i] && qs.length>1);
+    last[i]=idx;
+    return qs[idx];
+  }
+  function show(i){
+    var imgs=document.querySelectorAll('.story-image');
+    if(i>=imgs.length) return;
+    var img=imgs[i];
+    var b=img.querySelector('.funfact-bubble');
+    var t=img.querySelector('.funfact-bubble-text');
+    if(!b||!t) return;
+    t.textContent=pick(i);
+    if(b._fft){ clearTimeout(b._fft); }
+    b.classList.add('show');
+    b._fft=setTimeout(function(){ b.classList.remove('show'); }, reduce?0:4200);
+  }
+  var imgs=document.querySelectorAll('.story-image');
+  for(var i=0;i<imgs.length;i++){
+    (function(idx){
+      imgs[idx].addEventListener('click', function(e){
+        if(e.target.closest && e.target.closest('a')) return;
+        show(idx);
+      });
+    })(i);
+  }
 })();
 </script><aside class="quote-widget" id="quoteWidget" aria-label="每日一句"><button class="qw-mini" id="quoteMini" type="button" aria-label="展开每日一句">✦</button><div class="qw-body"><p class="qw-text" id="quoteWidgetText"></p><div class="qw-actions"><button type="button" id="quoteNext">换一句</button><button type="button" id="quoteClose">收起</button></div></div></aside></body></html>
