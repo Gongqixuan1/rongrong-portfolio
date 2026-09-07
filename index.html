@@ -79,6 +79,8 @@ html{scroll-padding-top:86px}
 /* 中文字体回退加固（国内无法加载 Google 字体时观感更稳定） */
 h1,h2,.title,.quote p,.fact strong,.story h3,.modal h2{font-family:'Noto Serif SC','Songti SC','STSong','SimSun',serif}
 .title,.contact h2{font-family:'Zhi Mang Xing','STKaiti','KaiTi','Kaiti SC',cursive}
+/* 首页大标题：与「我的时间图谱」同款艺术字（用户要求） */
+.hero h1{font-family:'Zhi Mang Xing','STKaiti','KaiTi','Kaiti SC',cursive;font-weight:400}
 
 /* 时间线：桌面端由6列改为3×2，均衡列高 */
 .timeline{grid-template-columns:repeat(3,1fr);column-gap:24px;row-gap:0;border-top:0}
@@ -107,11 +109,11 @@ h1,h2,.title,.quote p,.fact strong,.story h3,.modal h2{font-family:'Noto Serif S
 .project-card:hover,.comp:hover,.story:hover,.skill-box:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(11,31,58,.10);border-color:rgba(255,122,0,.35)}
 a:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline-offset:3px;border-radius:4px}
 
-/* 作品集：浅色“展示台”舞台 + 深色标注（修复白字不可见） */
-.portfolio{background:linear-gradient(180deg,#f5f7fa,#e9edf4);border-radius:16px;padding:26px;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 20px 45px rgba(11,31,58,.10)}
+/* 作品集：去掉背景板，纯透明自适应屏幕宽度（用户要求） */
+.portfolio{background:transparent;border-radius:0;padding:0;box-shadow:none;width:100%}
 .book-info,.book-count{color:var(--ink);font-weight:600;letter-spacing:.06em}
 @media(max-width:560px){
-  .portfolio{border-radius:12px;padding:10px}
+  .portfolio{border-radius:0;padding:0}
   .book-btn{width:44px;height:44px;font-size:21px}
 }
 
