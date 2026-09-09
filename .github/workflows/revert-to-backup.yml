@@ -1,0 +1,31 @@
+name: Revert to Backup
+on:
+  push:
+    paths:
+      - '.revert-trigger'
+jobs:
+  revert:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore index.html from backup branch
+        run: |
+          git show backup-before-interactive-features:index.html > index.html
+          echo "Restored size: $(wc -c < index.html)"
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "revert: 还原三个互动功能，恢复到备份版本"
+          git push
+      - name: Cleanup trigger
+        run: |
+          rm -f .revert-trigger
+          git add .revert-trigger
+          git commit -m "chore: remove revert trigger" || true
+          git push || true
