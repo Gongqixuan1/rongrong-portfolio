@@ -289,8 +289,63 @@ main .section:nth-of-type(7){animation-delay:.72s}
   .project-card:after,.comp:after,.story:after,.skill-box:after{transition:none}
 }
 
+/* ============================================================
+   VISUAL POLISH ROUND 5 · 细节巧思（纯视觉，不改任何内容）
+   1) 阅读进度条  2) hero滚动视差  3) 板块背景微过渡
+   4) 数字滚动动画  5) 时间线节点点亮  6) 图片悬停微缩放
+   7) 回到顶部按钮  8) 艺术字标题悬停微抖  9) 联系方式图标跳动
+   10) 头像三连点彩蛋
+   ============================================================ */
 
+/* 1) 阅读进度条 */
+#readProgress{position:fixed;top:0;left:0;height:3px;width:100%;background:linear-gradient(90deg,var(--orange),#f5a9c5);z-index:2147483647;transform-origin:left;transform:scaleX(0);pointer-events:none}
 
+/* 2) hero 滚动视差（轻量，CSS 变量驱动） */
+.hero:before{transform:translateY(var(--px-before,0))}
+.hero:after{transform:translateY(var(--px-after,0))}
+
+/* 3) 板块背景微过渡 */
+main .section{transition:background .8s ease}
+main .section.section-flash{background:rgba(231,84,128,.045)}
+
+/* 5) 时间线节点点亮 */
+.time:before{background:#d0d5dd;transform:scale(1);transition:background .4s ease,transform .4s ease,box-shadow .4s ease}
+.time.lit:before{background:var(--orange);transform:scale(1.35);box-shadow:0 0 0 4px rgba(231,84,128,.15)}
+
+/* 6) 图片悬停微缩放 */
+.story-image img{transition:transform .5s ease}
+.story-image:hover img{transform:scale(1.03)}
+
+/* 7) 回到顶部按钮 */
+#backTop{position:fixed;right:24px;bottom:24px;width:44px;height:44px;border-radius:50%;border:0;background:var(--orange);color:#fff;font-size:18px;cursor:pointer;z-index:900;box-shadow:0 6px 18px rgba(231,84,128,.35);opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .3s ease,transform .3s ease,visibility .3s}
+#backTop.show{opacity:1;visibility:visible;transform:translateY(0)}
+#backTop:hover{transform:translateY(-2px) rotate(360deg)}
+@media(max-width:560px){#backTop{right:16px;bottom:76px;width:40px;height:40px;font-size:16px}}
+
+/* 8) 艺术字标题悬停微抖 */
+.title{display:inline-block}
+.title:hover{animation:titleWiggle .35s ease}
+@keyframes titleWiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+
+/* 9) 联系方式图标悬停跳动 */
+.contact-item:hover::before{animation:iconBounce .45s ease}
+@keyframes iconBounce{0%,100%{transform:translateY(-50%)}50%{transform:translateY(calc(-50% - 5px))}}
+
+/* 10) 头像三连点彩蛋 */
+.avatar-card.easter-egg{animation:avatarShake .5s ease}
+@keyframes avatarShake{0%,100%{transform:rotate(2deg)}25%{transform:rotate(-1deg) translateX(-3px)}75%{transform:rotate(4deg) translateX(3px)}}
+.sticker.s1.easter-spin{animation:stickerSpin .6s ease}
+@keyframes stickerSpin{from{transform:rotate(7deg)}to{transform:rotate(367deg)}}
+
+@media (prefers-reduced-motion:reduce){
+  #readProgress{display:none}
+  .title:hover{animation:none}
+  .contact-item:hover::before{animation:none}
+  .avatar-card.easter-egg{animation:none}
+  .sticker.s1.easter-spin{animation:none}
+  .story-image:hover img{transform:none}
+  .time:before{background:var(--orange)}
+}
 
 </style><link rel="stylesheet" href="search.css"><script src="search.js" defer></script><script>
 /* ============================================================
@@ -562,6 +617,144 @@ main .section:nth-of-type(7){animation-delay:.72s}
   }
   window.addEventListener('scroll',onScroll,{passive:true});
   onScroll();
+})();
+</script>
+
+<script>
+/* ============================================================
+   VISUAL POLISH ROUND 5 · 细节巧思 JS（纯视觉，不改任何内容）
+   ============================================================ */
+(function(){
+  var reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* 1) 阅读进度条 */
+  if(!reduce){
+    var bar=document.createElement('div');
+    bar.id='readProgress';
+    document.body.appendChild(bar);
+    function updateProgress(){
+      var h=document.documentElement;
+      var scrolled=h.scrollTop||document.body.scrollTop;
+      var max=h.scrollHeight-h.clientHeight;
+      var pct=max>0?scrolled/max:0;
+      bar.style.transform='scaleX('+pct+')';
+    }
+    window.addEventListener('scroll',updateProgress,{passive:true});
+    window.addEventListener('resize',updateProgress);
+    updateProgress();
+  }
+
+  /* 2) hero 滚动视差（轻量） */
+  if(!reduce){
+    var hero=document.querySelector('.hero');
+    if(hero){
+      function parallax(){
+        var sy=window.scrollY;
+        if(sy<window.innerHeight){
+          hero.style.setProperty('--px-before',(sy*0.18)+'px');
+          hero.style.setProperty('--px-after',(sy*0.32)+'px');
+        }
+      }
+      window.addEventListener('scroll',parallax,{passive:true});
+    }
+  }
+
+  /* 3) 板块背景微过渡 */
+  if(!reduce && 'IntersectionObserver' in window){
+    var sections=document.querySelectorAll('main .section');
+    var secObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          en.target.classList.add('section-flash');
+          setTimeout(function(){en.target.classList.remove('section-flash')},600);
+          secObs.unobserve(en.target);
+        }
+      });
+    },{threshold:0.15});
+    sections.forEach(function(s){secObs.observe(s)});
+  }
+
+  /* 4) 数字滚动动画 */
+  if(!reduce && 'IntersectionObserver' in window){
+    var facts=document.querySelectorAll('.fact strong');
+    var numObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          animateNumber(en.target);
+          numObs.unobserve(en.target);
+        }
+      });
+    },{threshold:0.5});
+    facts.forEach(function(f){numObs.observe(f)});
+  }
+  function animateNumber(el){
+    var raw=el.textContent;
+    var m=raw.match(/^(\d+)(.*)$/);
+    if(!m) return;
+    var target=parseInt(m[1],10);
+    var suffix=m[2]||'';
+    var dur=1200, start=null;
+    function step(ts){
+      if(!start)start=ts;
+      var p=Math.min((ts-start)/dur,1);
+      var eased=1-Math.pow(1-p,3);
+      el.textContent=Math.round(target*eased)+suffix;
+      if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* 5) 时间线节点点亮 */
+  if(!reduce && 'IntersectionObserver' in window){
+    var times=document.querySelectorAll('.time');
+    var timeObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          en.target.classList.add('lit');
+          timeObs.unobserve(en.target);
+        }
+      });
+    },{threshold:0.4});
+    times.forEach(function(t){timeObs.observe(t)});
+  }
+
+  /* 7) 回到顶部按钮 */
+  var topBtn=document.createElement('button');
+  topBtn.id='backTop';
+  topBtn.type='button';
+  topBtn.setAttribute('aria-label','回到顶部');
+  topBtn.innerHTML='✦';
+  document.body.appendChild(topBtn);
+  function toggleTop(){
+    if(window.scrollY>window.innerHeight*0.8){topBtn.classList.add('show')}
+    else{topBtn.classList.remove('show')}
+  }
+  topBtn.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})};
+  window.addEventListener('scroll',toggleTop,{passive:true});
+  toggleTop();
+
+  /* 10) 头像三连点彩蛋 */
+  if(!reduce){
+    var avatar=document.querySelector('.avatar-card');
+    var s1=document.querySelector('.sticker.s1');
+    if(avatar){
+      var clicks=0, timer=null;
+      avatar.addEventListener('click',function(){
+        clicks++;
+        clearTimeout(timer);
+        timer=setTimeout(function(){clicks=0},800);
+        if(clicks>=3){
+          clicks=0;
+          avatar.classList.add('easter-egg');
+          if(s1){s1.classList.add('easter-spin')}
+          setTimeout(function(){
+            avatar.classList.remove('easter-egg');
+            if(s1){s1.classList.remove('easter-spin')}
+          },600);
+        }
+      });
+    }
+  }
 })();
 </script>
 
