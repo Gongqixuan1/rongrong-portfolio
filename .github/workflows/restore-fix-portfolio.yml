@@ -1,0 +1,34 @@
+name: Restore and Fix Portfolio
+on:
+  push:
+    paths:
+      - '.fix-trigger'
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore from backup and fix portfolio display
+        run: |
+          git checkout backup-before-interactive-features -- index.html
+          sed -i 's/max-height:650px/max-height:100%/g' index.html
+          echo "Restored+fixed size: $(wc -c < index.html)"
+          echo "max-height:650px count: $(grep -c 'max-height:650px' index.html)"
+          echo "pet-widget count: $(grep -c 'pet-widget' index.html)"
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "revert: 还原三个互动功能 + 修复作品集电脑端图片显示不完全"
+          git push
+      - name: Cleanup trigger
+        run: |
+          rm -f .fix-trigger
+          git add .fix-trigger
+          git commit -m "chore: remove fix trigger" || true
+          git push || true
