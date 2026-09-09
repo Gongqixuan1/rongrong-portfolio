@@ -1,0 +1,144 @@
+name: Apply Interactive Features
+on:
+  push:
+    paths:
+      - '.features-trigger'
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply features to index.html
+        run: |
+          python3 << 'PYEOF'
+          FILE = 'index.html'
+          with open(FILE, 'r', encoding='utf-8') as f:
+              html = f.read()
+          html = html.replace('#e75480', 'var(--orange)')
+          html = html.replace('#f5a9c5', 'var(--pink)')
+          css = '''
+          .theme-switcher{position:fixed;right:16px;bottom:120px;z-index:9998;display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 8px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,.1);border:1px solid rgba(0,0,0,.06)}
+          .theme-dot{width:24px;height:24px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.15);cursor:pointer;transition:transform .2s,box-shadow .2s;flex-shrink:0}
+          .theme-dot:hover{transform:scale(1.2)}
+          .theme-dot.active{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--orange)}
+          .theme-label{font-size:9px;color:#999;text-align:center;letter-spacing:.05em;writing-mode:vertical-rl;margin:2px 0}
+          .mail-trigger{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:9px 18px;background:var(--orange);color:#fff;border-radius:20px;font-size:12px;cursor:pointer;border:none;transition:transform .2s,box-shadow .2s}
+          .mail-trigger:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.15)}
+          .mail-modal{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;background:rgba(11,31,58,.5);backdrop-filter:blur(4px);padding:20px}
+          .mail-modal.show{display:flex}
+          .mail-paper{width:100%;max-width:440px;background:linear-gradient(180deg,#fffdf5 0%,#fff9e8 100%);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:32px 28px;position:relative;animation:mailIn .4s ease-out;border:1px solid #f0e6c8;box-sizing:border-box}
+          .mail-paper::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:repeating-linear-gradient(90deg,var(--orange) 0px,var(--orange) 8px,transparent 8px,transparent 16px);border-radius:8px 8px 0 0}
+          @keyframes mailIn{from{opacity:0;transform:translateY(30px) rotate(-2deg)}to{opacity:1;transform:translateY(0) rotate(0)}}
+          .mail-title{font-family:'Zhi Mang Xing','STKaiti','KaiTi',cursive;font-size:28px;color:var(--orange);text-align:center;margin:0 0 6px}
+          .mail-subtitle{font-size:11px;color:#b8a878;text-align:center;margin:0 0 20px;letter-spacing:.1em}
+          .mail-field{margin-bottom:14px}
+          .mail-field label{display:block;font-size:12px;color:#8a7a5a;margin-bottom:4px;font-weight:600}
+          .mail-field input,.mail-field textarea{width:100%;padding:10px 12px;border:1px solid #e8dcc0;border-radius:6px;background:rgba(255,255,255,.7);font-size:13px;font-family:inherit;color:#333;resize:vertical;box-sizing:border-box}
+          .mail-field input:focus,.mail-field textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(231,84,128,.1)}
+          .mail-field textarea{min-height:100px}
+          .mail-actions{display:flex;gap:10px;justify-content:center;margin-top:18px}
+          .mail-send{padding:10px 28px;background:var(--orange);color:#fff;border:none;border-radius:24px;font-size:14px;cursor:pointer;transition:transform .2s;font-weight:600}
+          .mail-send:hover{transform:scale(1.05)}
+          .mail-cancel{padding:10px 20px;background:transparent;color:#999;border:1px solid #ddd;border-radius:24px;font-size:13px;cursor:pointer}
+          .mail-success{text-align:center;padding:20px 0;display:none}
+          .mail-success.show{display:block}
+          .mail-pigeon{font-size:48px;margin-bottom:10px;animation:pigeonFly 1s ease-in-out infinite alternate;display:inline-block}
+          @keyframes pigeonFly{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-8px) rotate(5deg)}}
+          .mail-success p{font-size:13px;color:#8a7a5a;line-height:1.8;margin:0}
+          .pet-widget{position:fixed;left:16px;bottom:16px;z-index:9997;width:72px;cursor:pointer;user-select:none;transition:transform .2s}
+          .pet-widget:hover{transform:scale(1.08)}
+          .pet-body{width:64px;height:64px;margin:0 auto;position:relative}
+          .pet-svg{width:100%;height:100%;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+          .pet-bubble{position:absolute;top:-38px;left:50%;transform:translateX(-50%);background:#fff;padding:6px 12px;border-radius:14px;font-size:11px;color:#333;white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,.1);opacity:0;transition:opacity .3s;pointer-events:none;border:1px solid #f0f0f0;z-index:1}
+          .pet-bubble.show{opacity:1}
+          .pet-bubble::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid #fff}
+          .pet-status{text-align:center;font-size:9px;color:#999;margin-top:2px;letter-spacing:.05em}
+          .pet-close{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#fff;color:#999;border:1px solid #eee;font-size:11px;line-height:16px;text-align:center;cursor:pointer;opacity:0;transition:opacity .2s;z-index:2}
+          .pet-widget:hover .pet-close{opacity:1}
+          .pet-widget.hidden{display:none}
+          .pet-anim-bounce{animation:petBounce .6s ease-in-out}
+          @keyframes petBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+          .pet-anim-spin{animation:petSpin .8s ease-in-out}
+          @keyframes petSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+          .pet-anim-sleep .pet-svg{animation:petSleep 3s ease-in-out infinite}
+          @keyframes petSleep{0%,100%{transform:translateY(0)}50%{transform:translateY(2px)}}
+          @media(max-width:640px){.theme-switcher{right:10px;bottom:100px;padding:8px 6px}.theme-dot{width:20px;height:20px}.pet-widget{left:10px;bottom:10px;width:60px}.pet-body{width:54px;height:54px}.mail-paper{padding:24px 18px}}
+          '''
+          html = html.replace('</style>', css + '</style>', 1)
+          html_content = '''
+          <div class="theme-switcher" id="themeSwitcher" aria-label="主题切换">
+            <div class="theme-label">画风</div>
+            <div class="theme-dot active" data-theme="pink" style="background:#e75480" title="粉色"></div>
+            <div class="theme-dot" data-theme="blue" style="background:#4c6fff" title="蓝色"></div>
+            <div class="theme-dot" data-theme="purple" style="background:#9b59b6" title="紫色"></div>
+            <div class="theme-dot" data-theme="green" style="background:#27ae60" title="绿色"></div>
+          </div>
+          <div class="mail-modal" id="mailModal">
+            <div class="mail-paper">
+              <div class="mail-title">给宫启宣的一封信</div>
+              <div class="mail-subtitle">— 时空胶囊 · 见字如面 —</div>
+              <div id="mailForm">
+                <div class="mail-field"><label>你的名字</label><input type="text" id="mailName" placeholder="匿名也可以哦" maxlength="20"></div>
+                <div class="mail-field"><label>想说的话</label><textarea id="mailContent" placeholder="把想对我说的话写在这里吧～" maxlength="500"></textarea></div>
+                <div class="mail-actions">
+                  <button class="mail-send" id="mailSend" type="button">投入邮筒 ✉️</button>
+                  <button class="mail-cancel" id="mailCancel" type="button">再想想</button>
+                </div>
+              </div>
+              <div class="mail-success" id="mailSuccess">
+                <div class="mail-pigeon">🕊️</div>
+                <p>信鸽已放飞～<br>预计 3-5 个工作日送达<br>（如果没被猫抓走的话）</p>
+              </div>
+            </div>
+          </div>
+          <div class="pet-widget" id="petWidget">
+            <div class="pet-close" id="petClose">×</div>
+            <div class="pet-bubble" id="petBubble">你好呀～</div>
+            <div class="pet-body" id="petBody">
+              <svg class="pet-svg" viewBox="0 0 64 64" fill="none">
+                <ellipse cx="32" cy="56" rx="16" ry="4" fill="rgba(0,0,0,.1)"/>
+                <rect x="22" y="34" width="20" height="18" rx="6" fill="var(--pink)"/>
+                <circle cx="32" cy="24" r="14" fill="#ffdcc4"/>
+                <path d="M18 22 Q18 10 32 10 Q46 10 46 22 Q46 16 32 16 Q18 16 18 22Z" fill="#0b1f3a"/>
+                <ellipse cx="20" cy="20" rx="4" ry="6" fill="#0b1f3a"/>
+                <ellipse cx="44" cy="20" rx="4" ry="6" fill="#0b1f3a"/>
+                <circle cx="27" cy="25" r="1.8" fill="#0b1f3a"/>
+                <circle cx="37" cy="25" r="1.8" fill="#0b1f3a"/>
+                <circle cx="24" cy="29" r="2.5" fill="rgba(231,84,128,.4)"/>
+                <circle cx="40" cy="29" r="2.5" fill="rgba(231,84,128,.4)"/>
+                <path d="M29 31 Q32 33 35 31" stroke="var(--orange)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M38 12 L44 8 L44 16 Z" fill="var(--orange)"/>
+                <path d="M38 12 L32 8 L32 16 Z" fill="var(--orange)"/>
+                <circle cx="38" cy="12" r="2" fill="#c94468"/>
+              </svg>
+            </div>
+            <div class="pet-status" id="petStatus">闲逛中</div>
+          </div>
+          '''
+          html = html.replace('</body>', html_content + '</body>', 1)
+          js = '''
+          (function(){var themes={pink:{orange:'#e75480',pink:'#f5a9c5'},blue:{orange:'#4c6fff',pink:'#8bc8ea'},purple:{orange:'#9b59b6',pink:'#c9a7e8'},green:{orange:'#27ae60',pink:'#a2ddaa'}};function applyTheme(name){var t=themes[name];if(!t)return;document.documentElement.style.setProperty('--orange',t.orange);document.documentElement.style.setProperty('--pink',t.pink);document.querySelectorAll('.theme-dot').forEach(function(d){d.classList.toggle('active',d.dataset.theme===name)})}var saved=localStorage.getItem('portfolio-theme');if(saved&&themes[saved])applyTheme(saved);document.querySelectorAll('.theme-dot').forEach(function(dot){dot.addEventListener('click',function(){var name=dot.dataset.theme;applyTheme(name);localStorage.setItem('portfolio-theme',name)})})})();
+          (function(){var modal=document.getElementById('mailModal');if(!modal)return;var emailUser='3582686820';var emailDomain='qq.com';var email=emailUser+'@'+emailDomain;var contactList=document.querySelector('.contact-list');if(contactList){var btn=document.createElement('button');btn.className='mail-trigger';btn.type='button';btn.innerHTML='✉️ 给宫启宣寄一封手写信';btn.addEventListener('click',openMail);contactList.appendChild(btn)}function openMail(){modal.classList.add('show');document.getElementById('mailForm').style.display='block';document.getElementById('mailSuccess').classList.remove('show')}function closeMail(){modal.classList.remove('show')}document.getElementById('mailCancel').addEventListener('click',closeMail);modal.addEventListener('click',function(e){if(e.target===modal)closeMail()});document.getElementById('mailSend').addEventListener('click',function(){var name=document.getElementById('mailName').value.trim()||'匿名朋友';var content=document.getElementById('mailContent').value.trim();if(!content){alert('写点什么再投进邮筒吧～');return}var subject='来自 '+name+' 的一封信';var body='亲爱的宫启宣：\\n\\n'+content+'\\n\\n—— '+name;window.location.href='mailto:'+email+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);document.getElementById('mailForm').style.display='none';document.getElementById('mailSuccess').classList.add('show');setTimeout(closeMail,3500)})})();
+          (function(){var widget=document.getElementById('petWidget');if(!widget)return;var bubble=document.getElementById('petBubble');var body=document.getElementById('petBody');var status=document.getElementById('petStatus');var closeBtn=document.getElementById('petClose');var moods=[{name:'闲逛中',texts:['你好呀～','今天也要开心哦','逛一逛～','发现你了！'],anim:''},{name:'犯困中',texts:['好困...','Zzz...','打个哈欠','梦到暴富了'],anim:'pet-anim-sleep'},{name:'开心中',texts:['芜湖！','有人夸我设计好看！','嘿嘿～','今天心情不错'],anim:'pet-anim-bounce'},{name:'忙碌中',texts:['在跑了在跑了','难题别追我！','赶工中...','稍等一下下'],anim:'pet-anim-spin'}];var intimacy=parseInt(localStorage.getItem('pet-intimacy')||'0',10);var bubbleTimer=null;function showBubble(text,dur){bubble.textContent=text;bubble.classList.add('show');clearTimeout(bubbleTimer);bubbleTimer=setTimeout(function(){bubble.classList.remove('show')},dur||2500)}function setMood(idx){var m=moods[idx];status.textContent=m.name;body.className='pet-body'+(m.anim?' '+m.anim:'')}function randomMood(){var idx=Math.floor(Math.random()*moods.length);setMood(idx);showBubble(moods[idx].texts[Math.floor(Math.random()*moods[idx].texts.length)])}setMood(0);setTimeout(function(){showBubble('你来啦～')},1500);setInterval(randomMood,15000);widget.addEventListener('click',function(e){if(e.target===closeBtn)return;intimacy++;localStorage.setItem('pet-intimacy',String(intimacy));var texts=['嘿嘿，再摸一下','亲密度+'+intimacy,'你偷看了我'+intimacy+'次啦','交个朋友吧？','今天也要元气满满哦','谢谢你陪我玩～'];if(intimacy>=10&&intimacy%10===0){texts=['哇！我们已经认识'+intimacy+'次了！','你是我的好朋友啦','专属彩蛋：你是最棒的！']}showBubble(texts[Math.floor(Math.random()*texts.length)]);body.classList.remove('pet-anim-bounce');void body.offsetWidth;body.classList.add('pet-anim-bounce')});closeBtn.addEventListener('click',function(e){e.stopPropagation();widget.classList.add('hidden');localStorage.setItem('pet-hidden','1')});if(localStorage.getItem('pet-hidden')==='1')widget.classList.add('hidden')})();
+          '''
+          pos = html.rfind('</script>')
+          html = html[:pos] + js + '\n' + html[pos:]
+          with open(FILE, 'w', encoding='utf-8') as f:
+              f.write(html)
+          print('Done. New size:', len(html))
+          PYEOF
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "feat: 添加主题切换/时空胶囊邮件/赛博宠物三个互动功能"
+          git push
+      - name: Cleanup trigger
+        run: |
+          rm -f .features-trigger
+          git add .features-trigger
+          git commit -m "chore: remove features trigger" || true
+          git push || true
