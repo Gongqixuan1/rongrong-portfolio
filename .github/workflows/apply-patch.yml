@@ -1,0 +1,38 @@
+name: Apply Index Patch
+on:
+  push:
+    paths:
+      - '.patch-trigger'
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply patch to index.html
+        run: |
+          python3 << 'PYEOF'
+          with open('index.html', 'r') as f:
+              c = f.read()
+          c = c.replace('.book-stage img{max-width:100%;max-height:85%;width:auto;height:auto}', '.book-stage img{max-width:80%;max-height:80%;width:auto;height:auto}')
+          c = c.replace('  .book-stage img{max-width:100%;max-height:85%;box-shadow:0 18px 38px #0b1f3a22;}', '  .book-stage img{max-width:80%;max-height:80%;box-shadow:0 18px 38px #0b1f3a22;}')
+          c = c.replace('<div class="exp-role">零售部厅堂助理实习生</div><ul><li>协助零售部厅堂日常运营，负责客户接待、业务咨询及分流引导，日均服务客户80余人次。</li><li>主动识别客户存款理财需求并转介至理财经理跟进，累计转介意向客户20余位，协助落地存款及理财资金超200万元。</li><li>通过识别客户需求优化厅堂分流流程，协助将高峰时段客户平均等候时间缩短约15%。</li></ul>', '<div class="exp-role">客户经理助理实习生</div><ul><li>协助客户经理进行厅堂客户需求识别与转化，精准推荐重庆巴南支行，累计转介落地存款及理财资金超200万元。</li><li>日均接待客户80余人次，主动执行客户产品营销话术，积累了客户沟通与商机捕捉的实战经验。</li><li>配合团队优化厅堂分流方案，协助将客户平均等候时长缩短约15%，提升服务体验与运营效率。</li></ul>')
+          c = c.replace('<div class="exp-date">2026.07 — 2026.10</div><h3>深圳亿龙达信息技术有限公司</h3><div class="exp-role">新媒体运营实习生</div><ul><li>聚焦跨境物流赛道挖掘行业热点，自主完成选题策划、原创文案撰写，累计产出垂直行业原创内容20+篇。</li><li>运用 AI 工具及 Photoshop、稿定设计完成海报、宣传单、易拉宝等物料设计制作，参与线下展会布展跟进，同时负责多平台内容分发与官网维护。</li><li>对接客户咨询，进行初步需求识别与筛选，将潜在客户线索转至销售团队跟进，累计转介意向客户20余位。</li></ul>', '<div class="exp-date">2026.07 — 2026.09</div><h3>深圳亿龙达信息技术有限公司</h3><div class="exp-role">市场专员实习生</div><ul><li>聚焦跨境物流赛道挖掘行业热点，自主完成选题策划、原创文案撰写，累计产出垂直行业原创内容20+篇。</li><li>对接各平台客户咨询，进行需求识别与意向筛选，累计引流获客60余位，筛选后建群深度沟通20家，最终协助推动业务合作落地5家，具备销售前端沟通与转化能力。</li><li>运用AI及设计软件完成海报、宣传单等营销物料设计，参与线下展会布展与多渠道内容分发，有效提升品牌行业曝光度。</li></ul>')
+          with open('index.html', 'w') as f:
+              f.write(c)
+          print('patch applied, size:', len(c))
+          PYEOF
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "feat: 作品集四周均匀留白80% + 实习岗位与工作内容替换"
+          git push
+      - name: Cleanup trigger
+        run: |
+          rm -f .patch-trigger
+          git add .patch-trigger
+          git commit -m "chore: remove patch trigger" || true
+          git push || true
