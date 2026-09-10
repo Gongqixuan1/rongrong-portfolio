@@ -1,0 +1,78 @@
+name: Add Num Anim V2
+on:
+  push:
+    paths:
+      - '.numanim2-trigger'
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: backup-before-interactive-features
+      - name: Add number animation
+        run: |
+          python3 << 'PYEOF'
+          import re
+          with open("index.html", "r", encoding="utf-8") as f:
+              html = f.read()
+          # 数字标签
+          html = html.replace("累计处理会计凭证1000余份", '累计处理会计凭证<span class="num-animate" data-target="1000">0</span>余份')
+          html = html.replace("累计转介落地存款及理财资金超200万元", '累计转介落地存款及理财资金超<span class="num-animate" data-target="200">0</span>万元')
+          html = html.replace("日均接待客户80余人次", '日均接待客户<span class="num-animate" data-target="80">0</span>余人次')
+          html = html.replace("累计产出垂直行业原创内容20+篇", '累计产出垂直行业原创内容<span class="num-animate" data-target="20">0</span>+篇')
+          html = html.replace("累计引流获客60余位", '累计引流获客<span class="num-animate" data-target="60">0</span>余位')
+          html = html.replace("筛选后建群深度沟通20家", '筛选后建群深度沟通<span class="num-animate" data-target="20">0</span>家')
+          html = html.replace("最终协助推动业务合作落地5家", '最终协助推动业务合作落地<span class="num-animate" data-target="5">0</span>家')
+          html = html.replace("回收有效问卷200余份", '回收有效问卷<span class="num-animate" data-target="200">0</span>余份')
+          html = html.replace("累计服务学生130余人次", '累计服务学生<span class="num-animate" data-target="130">0</span>余人次')
+          # CSS
+          css = '\n<style>\n.num-animate{font-weight:700;color:var(--orange,#e75480);display:inline-block;min-width:1.5em;text-align:center}\n</style>\n'
+          if "</style>" in html:
+              html = html.replace("</style>", "</style>"+css, 1)
+          else:
+              html = html.replace("</head>", css+"</head>")
+          # JS
+          js = '''
+<script>
+(function(){
+function animateNumber(el){
+var target=parseInt(el.getAttribute('data-target'),10);
+var duration=2500;var startTime=null;
+function step(timestamp){
+if(!startTime)startTime=timestamp;
+var progress=Math.min((timestamp-startTime)/duration,1);
+var eased=1-Math.pow(1-progress,4);
+el.textContent=Math.floor(eased*target);
+if(progress<1)requestAnimationFrame(step);else el.textContent=target;
+}
+requestAnimationFrame(step);
+}
+var observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){if(entry.isIntersecting)animateNumber(entry.target);});
+},{threshold:0.5});
+document.querySelectorAll('.num-animate').forEach(function(el){observer.observe(el);});
+})();
+</script>
+'''
+          if "</body>" in html:
+              html = html.replace("</body>", js+"</body>")
+          else:
+              html += js
+          with open("index.html","w",encoding="utf-8") as f:
+              f.write(html)
+          print("done, size:", len(html))
+          PYEOF
+      - name: Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "feat: add number scroll animation"
+          git push origin backup-before-interactive-features
+          rm -f .numanim2-trigger
+          git add .numanim2-trigger
+          git commit -m "cleanup" || true
+          git push origin backup-before-interactive-features || true
