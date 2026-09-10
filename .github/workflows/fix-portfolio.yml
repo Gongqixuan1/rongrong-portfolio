@@ -1,0 +1,34 @@
+name: Fix Portfolio Display
+on:
+  push:
+    branches:
+      - backup-before-interactive-features
+    paths:
+      - '.portfolio-fix-trigger'
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: backup-before-interactive-features
+      - name: Fix portfolio image max-height
+        run: |
+          sed -i 's/max-height:650px/max-height:100%/g' index.html
+          echo "max-height:650px remaining: $(grep -c 'max-height:650px' index.html)"
+          echo "File size: $(wc -c < index.html)"
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "fix: 作品集电脑端图片max-height改为100%，修复显示不完全"
+          git push origin backup-before-interactive-features
+      - name: Cleanup trigger
+        run: |
+          rm -f .portfolio-fix-trigger
+          git add .portfolio-fix-trigger
+          git commit -m "chore: remove portfolio fix trigger" || true
+          git push origin backup-before-interactive-features || true
