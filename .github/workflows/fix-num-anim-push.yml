@@ -1,0 +1,44 @@
+name: Fix Num Anim Push
+on:
+  push:
+    paths:
+      - '.fna-trigger'
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: backup-before-interactive-features
+      - name: Add exp number animation
+        run: |
+          python3 -c "
+import re
+with open('index.html','r',encoding='utf-8') as f: html=f.read()
+html=html.replace('累计处理会计凭证1000余份','累计处理会计凭证<span class=\"exp-num\">1000</span>余份')
+html=html.replace('累计转介落地存款及理财资金超200万元','累计转介落地存款及理财资金超<span class=\"exp-num\">200</span>万元')
+html=html.replace('日均接待客户80余人次','日均接待客户<span class=\"exp-num\">80</span>余人次')
+html=html.replace('累计产出垂直行业原创内容20+篇','累计产出垂直行业原创内容<span class=\"exp-num\">20</span>+篇')
+html=html.replace('累计引流获客60余位','累计引流获客<span class=\"exp-num\">60</span>余位')
+html=html.replace('筛选后建群深度沟通20家','筛选后建群深度沟通<span class=\"exp-num\">20</span>家')
+html=html.replace('最终协助推动业务合作落地5家','最终协助推动业务合作落地<span class=\"exp-num\">5</span>家')
+html=html.replace('回收有效问卷200余份','回收有效问卷<span class=\"exp-num\">200</span>余份')
+html=html.replace('累计服务学生130余人次','累计服务学生<span class=\"exp-num\">130</span>余人次')
+html=html.replace('</style>','.exp-num{font-weight:700;color:var(--orange)}\n</style>',1)
+html=html.replace('facts.forEach(function(f){numObs.observe(f)});','facts.forEach(function(f){numObs.observe(f)});var e=document.querySelectorAll(\".exp-num\");e.forEach(function(n){numObs.observe(n)});')
+with open('index.html','w',encoding='utf-8') as f: f.write(html)
+print('done',len(html))
+"
+      - name: Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "feat: add number animation to internship numbers"
+          git push origin backup-before-interactive-features
+          rm -f .fna-trigger
+          git add .fna-trigger
+          git commit -m "cleanup" || true
+          git push origin backup-before-interactive-features || true
