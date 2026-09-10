@@ -1,0 +1,40 @@
+name: Update Original Site Role Images
+on:
+  push:
+    paths:
+      - '.update-original-trigger'
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: backup-before-interactive-features
+      - name: Download new images
+        run: |
+          curl -sL -o climbing1.jpg "https://raw.githubusercontent.com/Gongqixuan1/GQXdouyinfenxiang/main/climbing1.jpg"
+          curl -sL -o teachernew.jpg "https://raw.githubusercontent.com/Gongqixuan1/GQXdouyinfenxiang/main/teachernew.jpg"
+          curl -sL -o design.jpg "https://raw.githubusercontent.com/Gongqixuan1/GQXdouyinfenxiang/main/design.jpg"
+          ls -la climbing1.jpg teachernew.jpg design.jpg
+      - name: Update references
+        run: |
+          sed -i 's/climbing\.jpg/climbing1.jpg/g' index.html
+          sed -i 's/childcare\.jpg/teachernew.jpg/g' index.html
+          sed -i 's/封面设计师配图\.jpg/design.jpg/g' index.html
+          echo "引用已更新"
+          grep -c 'climbing1.jpg' index.html
+          grep -c 'teachernew.jpg' index.html
+          grep -c 'design.jpg' index.html
+      - name: Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add climbing1.jpg teachernew.jpg design.jpg index.html
+          git commit -m "fix: update role images to new photos"
+          git push origin backup-before-interactive-features
+          rm -f .update-original-trigger
+          git add .update-original-trigger
+          git commit -m "cleanup" || true
+          git push origin backup-before-interactive-features || true
