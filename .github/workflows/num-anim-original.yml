@@ -1,0 +1,30 @@
+name: Add Num Anim Original
+on:
+  push:
+    paths:
+      - '.num-anim-orig-trigger'
+jobs:
+  numanim:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: backup-before-interactive-features
+      - name: Get script from main
+        run: |
+          git show main:add_num_anim_original.py > add_num_anim_original.py
+      - name: Run script
+        run: python3 add_num_anim_original.py
+      - name: Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "feat: add number scroll animation to internships and projects"
+          git push origin backup-before-interactive-features
+          rm -f .num-anim-orig-trigger
+          git add .num-anim-orig-trigger
+          git commit -m "cleanup" || true
+          git push origin backup-before-interactive-features || true
